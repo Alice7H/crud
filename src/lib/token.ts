@@ -1,4 +1,4 @@
-import { sign, verify } from 'jsonwebtoken';
+import { sign, verify } from "jsonwebtoken";
 
 const secretKey = process.env.NEXT_PUBLIC_JWT_SECRET_KEY as string;
 

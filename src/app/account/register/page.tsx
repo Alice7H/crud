@@ -2,9 +2,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { userService } from "@/services/user.service";
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
 const validationSchema = z.object({
   name: z.string(),
@@ -35,7 +35,7 @@ export default function Register() {
   }
 
   return (
-    <div className='flex flex-col w-full h-[90vh] justify-center items-center'>
+    <div className="flex flex-col w-full h-[90vh] justify-center items-center">
       <form onSubmit={handleSubmit(onSubmit)} className="border flex flex-col items-center p-8">
         <h1 className="card-header text-xl text-center font-bold mb-6">Cadastrar</h1>
         <div className="mb-3">

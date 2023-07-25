@@ -1,10 +1,10 @@
-'use client'
+"use client"
 import Link from "next/link"
 import { useRouter } from "next/navigation";
 import { userService } from "@/services/user.service";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from 'zod';
+import * as z from "zod";
 
 interface IProps {
   user?: User
@@ -32,7 +32,7 @@ export function AddEdit({user}: IProps) {
       name: user?.name,
       username: user?.username,
       email: user?.email,
-      password: '',
+      password: "",
       avatarUrl: user?.avatarUrl,
     }
   });

@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { useEffect, useState } from "react";
 import { userService } from "@/services/user.service";
 import { TableUsers } from "@/components";

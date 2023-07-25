@@ -1,6 +1,6 @@
-import { generateHash, verifyPassword } from '@/lib/hashPassword';
-import prisma from './prisma';
-import { signJWT } from '@/lib/token';
+import { generateHash, verifyPassword } from "@/lib/hashPassword";
+import prisma from "./prisma";
+import { signJWT } from "@/lib/token";
 
 export const usersRepo = {
   authenticate,
