@@ -24,7 +24,7 @@ export default function Login(){
 
   function onSubmit({email, password }: Partial<User>){
     return userService.login(email as string, password as string)
-      .then(() => router.push('/users'))
+      .then(() => router.replace('/users'))
       .catch((error) => alert(error))
   }
 

@@ -1,12 +1,13 @@
 'use client'
 import { AddEdit, Spinner } from "@/components";
 import { userService } from "@/services/user.service";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Edit() {
   const [user, setUser] = useState<User|null>(null);
   const params = useParams();
+  const router = useRouter();
 
   useEffect(() => {
     const { id } = params;
@@ -14,11 +15,14 @@ export default function Edit() {
     const getUser = async ()=> {
       await userService.getById(id as string)
           .then(foundUser => setUser(foundUser))
-          .catch(error => alert(error))
+          .catch(error => {
+            router.push('/account/login')
+            alert(error)
+          })
     }
     getUser();
 
-  }, [params]);
+  }, [params, router]);
 
   return (
       <>

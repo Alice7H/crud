@@ -1,5 +1,5 @@
 import { usersRepo } from "@/helpers/api/users-repo";
-import { verifyAuthentication, verifyAuthorization } from "@/helpers/api/verifyAuth";
+import { verifyAdminAuthorization, verifyAuthentication, verifyAuthorization } from "@/helpers/api/verifyAuth";
 import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
@@ -9,7 +9,8 @@ export async function GET(request: NextRequest) {
     if (!isAuthenticated) return NextResponse.json({message: 'Token inválido'}, {status: 401 })
 
     const isAuthorized = await verifyAuthorization(request, id);
-    if(!isAuthorized) return NextResponse.json({message: 'Não autorizado'}, {status: 401 })
+    const isAdmin = await verifyAdminAuthorization(request, id);
+    if(!isAuthorized && !isAdmin) return NextResponse.json({message: 'Não autorizado'}, {status: 401 })
 
     const user = await usersRepo.getById(id);
     return NextResponse.json(user, {status: 200 })
@@ -27,7 +28,8 @@ export async function PUT(request: NextRequest){
     if (!isAuthenticated) return NextResponse.json({message: 'Token inválido'}, {status: 401 })
 
     const isAuthorized = await verifyAuthorization(request, id);
-    if(!isAuthorized) return NextResponse.json({message: 'Não autorizado'}, {status: 401 })
+    const isAdmin = await verifyAdminAuthorization(request, id);
+    if(!isAuthorized && !isAdmin) return NextResponse.json({message: 'Não autorizado'}, {status: 401 })
 
     const data = await request.json()
     await usersRepo.update(id, data)
@@ -46,8 +48,8 @@ export async function DELETE(request: NextRequest) {
     if (!isAuthenticated) return NextResponse.json({message: 'Token inválido'}, {status: 401 })
 
     const isAuthorized = await verifyAuthorization(request, id);
-    const isAdmin = (process.env.NEXT_PUBLIC_MASTER_USER ||'') === id;
-    if(!isAuthorized || isAdmin) return NextResponse.json({message: 'Não autorizado'}, {status: 401 })
+    const isAdmin = await verifyAdminAuthorization(request, id);
+    if(!isAuthorized && !isAdmin) return NextResponse.json({message: 'Não autorizado'}, {status: 401 })
 
     await usersRepo.delete(id)
     return NextResponse.json({}, {status: 200});

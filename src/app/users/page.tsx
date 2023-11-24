@@ -1,8 +1,9 @@
 "use client"
 import { useEffect, useState } from "react";
 import { userService } from "@/services/user.service";
-import { TableUsers } from "@/components";
+import { Spinner, TableUsers } from "@/components";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export interface IUser {
   id: string,
@@ -16,11 +17,16 @@ export interface IUser {
 
 export default function Users(){
   const [users, setUsers] = useState<IUser[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const router = useRouter();
 
   useEffect(()=> {
+    setLoadingUsers(false);
+
     userService.getAll()
     .then(foundUsers => {setUsers(foundUsers)})
-    .catch(err => {alert(err)});
+    .catch(err => {alert(err)})
+    .finally(()=> setLoadingUsers(true))
   },[])
 
   function deleteUser(id: string){
@@ -30,7 +36,10 @@ export default function Users(){
     }));
     userService.delete(id).then(() => {
       setUsers(users => users.filter(user => user.id !== id));
-    }).catch(error => alert(error));
+    }).catch(error => {
+      router.push('/account/login')
+      alert(error)
+    });
   }
 
   return (
@@ -41,7 +50,7 @@ export default function Users(){
           <Link href="/users/add" className="border border-slate-500 bg-green-300 rounded hover:bg-green-400 p-4">Adicionar Usuário</Link>
         </div>
 
-        <TableUsers users={users} deleteUser={deleteUser}/>
+        { !loadingUsers ? <Spinner /> : <TableUsers users={users} deleteUser={deleteUser}/>}
       </div>
     </>
   )

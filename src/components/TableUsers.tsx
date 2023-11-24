@@ -1,5 +1,5 @@
 import { IUser } from "@/app/users/page";
-import { Spinner } from "./Spinner";
+import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
 
 interface IProps {
@@ -7,6 +7,8 @@ interface IProps {
   deleteUser: (id: string) => void;
 }
 export function TableUsers ({users, deleteUser}: IProps) {
+  const {user} = useAuth();
+  const userAuth = user;
   return (
     <>
      <table className="border mt-8 p-4 table-auto min-w-full">
@@ -19,7 +21,7 @@ export function TableUsers ({users, deleteUser}: IProps) {
           </tr>
         </thead>
         <tbody>
-          {users && users.map(user =>
+          { users.length > 0 ? users.map(user =>
             <tr key={user.id} className="border">
               <td className="text-center p-2" >{user.name}</td>
               <td className="text-center p-2" >{user.username}</td>
@@ -33,21 +35,8 @@ export function TableUsers ({users, deleteUser}: IProps) {
                       }
                   </button>
               </td>
-            </tr>
-          )}
-          {!users &&
-            <tr>
-              <td colSpan={4}>
-                  <Spinner />
-              </td>
-            </tr>
-          }
-          {users && !users.length &&
-            <tr>
-              <td colSpan={4} className="text-center">
-                  <div className="p-2">Sem usuários</div>
-              </td>
-            </tr>
+            </tr>)
+            : <tr> <td colSpan={4} className="text-center"><div className="p-2">Sem usuários</div> </td></tr>
           }
         </tbody>
       </table>

@@ -16,7 +16,7 @@ export async function verifyAuthentication(request: NextRequest) {
   }
 }
 
-export async function verifyAuthorization(request: NextRequest, id: string) {
+export async function verifyAdminAuthorization(request: NextRequest, id: string) {
   try {
     const masterUser = process.env.NEXT_PUBLIC_MASTER_USER;
     const token = getAuthToken(request);
@@ -29,6 +29,25 @@ export async function verifyAuthorization(request: NextRequest, id: string) {
     if(data !== dataCookie) return false;
 
     if(masterUser && (masterUser == data) || (data === dataCookie && data == id)) return true;
+    else return false;
+
+  } catch(error: any){
+    return false;
+  }
+}
+
+export async function verifyAuthorization(request: NextRequest, id: string) {
+  try {
+    const token = getAuthToken(request);
+    const tokenCookie = request.cookies.get('token')?.value;
+
+    if(!token || !tokenCookie) return false;
+
+    const data = await verifyToken(token);
+    const dataCookie = await verifyToken(tokenCookie.replaceAll('"', ""));
+    if(data !== dataCookie) return false;
+
+    if( (data === dataCookie && data == id)) return true;
     else return false;
 
   } catch(error: any){
